@@ -1,0 +1,7 @@
+# Ignore large dataset zip files, as GitHub has a strict 100MB limit.
+*.zip
+
+# Root IDE
+.vscode
+.idea
+.DS_Store
