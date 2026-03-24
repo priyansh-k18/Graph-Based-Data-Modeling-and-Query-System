@@ -5,14 +5,21 @@ const Database = require('better-sqlite3');
 const DATASET_DIR = path.join(__dirname, '../dataset/sap-o2c-data');
 const DB_PATH = path.join(__dirname, 'dataset.db');
 
-// Delete existing DB to start fresh
-if (fs.existsSync(DB_PATH)) {
-    console.log('Deleting existing database to recreate...');
-    fs.unlinkSync(DB_PATH);
-}
+const isVercel = process.env.VERCEL === "1";
+let db;
 
-const db = new Database(DB_PATH);
-db.pragma('journal_mode = WAL');
+if (isVercel) {
+    console.log('Detected Vercel. Opening database in readonly mode...');
+    db = new Database(DB_PATH, { readonly: true });
+} else {
+    // Delete existing DB to start fresh locally
+    if (fs.existsSync(DB_PATH)) {
+        console.log('Deleting existing database to recreate...');
+        fs.unlinkSync(DB_PATH);
+    }
+    
+    db = new Database(DB_PATH);
+    db.pragma('journal_mode = WAL');
 
 // Read all directories
 const tables = fs.readdirSync(DATASET_DIR).filter(f => fs.statSync(path.join(DATASET_DIR, f)).isDirectory());
@@ -92,7 +99,8 @@ tables.forEach(tableName => {
     console.log(`Loaded ${insertedCount} rows into ${tableName}`);
 });
 
-console.log('Database ingestion complete!');
+    console.log('Database ingestion complete!');
+}
 
 // Export the db for other scripts to use
 module.exports = db;
