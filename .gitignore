@@ -2,6 +2,7 @@
 *.zip
 
 # Root IDE
-.vscode
 .idea
 .DS_Store
+config.bat
+node_modules
