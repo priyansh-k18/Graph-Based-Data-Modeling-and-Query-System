@@ -8,6 +8,32 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Debug endpoint to find dataset.db
+app.get('/api/debug', (req, res) => {
+    const fs = require('fs');
+    const path = require('path');
+    try {
+        const cwd = process.cwd();
+        const dir = __dirname;
+        const cwdFiles = fs.readdirSync(cwd).slice(0, 20);
+        let backendFiles = [];
+        try { backendFiles = fs.readdirSync(path.join(cwd, 'backend')); } catch(e){}
+        const dirFiles = fs.readdirSync(dir).slice(0, 20);
+        
+        res.json({
+            cwd,
+            dir,
+            cwdFiles,
+            backendFiles,
+            dirFiles,
+            vercel: process.env.VERCEL,
+            nodeVersion: process.version
+        });
+    } catch(e) {
+        res.json({ error: e.message });
+    }
+});
+
 // Helper function to build the graph
 app.get('/api/graph', (req, res) => {
     try {
