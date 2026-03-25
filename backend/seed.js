@@ -98,6 +98,10 @@ console.log('Database ingestion complete! Checkpointing and closing...');
 
 // Checkpoint the WAL file into the main DB so the DB is self-contained
 db.pragma('wal_checkpoint(TRUNCATE)');
+
+// TRITICAL FIX for Vercel: Switch back to DELETE mode so it doesn't try to create a .db-shm lock file in read-only /var/task mapping
+db.pragma('journal_mode = DELETE');
+
 db.close();
 console.log('Database ready for use.');
 
