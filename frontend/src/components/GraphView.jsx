@@ -100,7 +100,7 @@ const GraphView = ({ initialNodes, initialEdges, highlightedNodes }) => {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
-        fitView
+        defaultViewport={{ x: 50, y: 50, zoom: 0.7 }}
         attributionPosition="bottom-right"
         className="dark-theme-flow"
       >
